@@ -1,7 +1,9 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
+using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using ContosoUniversity.Data;
 using MediatR;
@@ -25,27 +27,35 @@ namespace ContosoUniversity.Features.Students
             public DateTime EnrollmentDate { get; set; }
         }
 
-        public class QueryHandler : AsyncRequestHandler<Query, Command>
+        public class QueryHandler : IRequestHandler<Query, Command>
         {
             private readonly SchoolContext _db;
+            private readonly IConfigurationProvider _configuration;
 
-            public QueryHandler(SchoolContext db) => _db = db;
+            public QueryHandler(SchoolContext db, IConfigurationProvider configuration)
+            {
+                _db = db;
+                _configuration = configuration;
+            }
 
-            protected override async Task<Command> HandleCore(Query message) => await _db
+            public async Task<Command> Handle(Query message, CancellationToken token) => await _db
                 .Students
                 .Where(s => s.Id == message.Id)
-                .ProjectTo<Command>()
+                .ProjectTo<Command>(_configuration)
                 .SingleOrDefaultAsync();
         }
 
-        public class CommandHandler : AsyncRequestHandler<Command>
+        public class CommandHandler : IRequestHandler<Command>
         {
             private readonly SchoolContext _db;
 
             public CommandHandler(SchoolContext db) => _db = db;
 
-            protected override async Task HandleCore(Command message) 
-                => _db.Students.Remove(await _db.Students.FindAsync(message.ID));
+            public async Task<Unit> Handle(Command message, CancellationToken token)
+            {
+                _db.Students.Remove(await _db.Students.FindAsync(message.ID));
+                return default;
+            }
         }
 
     }

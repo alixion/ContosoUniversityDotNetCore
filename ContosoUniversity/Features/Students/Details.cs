@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
+using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using ContosoUniversity.Data;
 using ContosoUniversity.Models;
@@ -34,18 +36,23 @@ namespace ContosoUniversity.Features.Students
             }
         }
 
-        public class Handler : AsyncRequestHandler<Query, Model>
+        public class Handler : IRequestHandler<Query, Model>
         {
             private readonly SchoolContext _db;
+            private readonly IConfigurationProvider _configuration;
 
-            public Handler(SchoolContext db) => _db = db;
+            public Handler(SchoolContext db, IConfigurationProvider configuration)
+            {
+                _db = db;
+                _configuration = configuration;
+            }
 
-            protected override async Task<Model> HandleCore(Query message) => await _db
+            public async Task<Model> Handle(Query message, CancellationToken token) => await _db
                 .Students
                 .Include(m => m.Enrollments)
                 .ThenInclude(e => e.Course)
                 .Where(s => s.Id == message.Id)
-                .ProjectTo<Model>()
+                .ProjectTo<Model>(_configuration)
                 .SingleOrDefaultAsync();
         }
     }

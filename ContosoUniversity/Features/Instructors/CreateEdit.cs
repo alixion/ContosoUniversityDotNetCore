@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
@@ -80,13 +81,18 @@ namespace ContosoUniversity.Features.Instructors
             }
         }
 
-        public class QueryHandler : AsyncRequestHandler<Query, Command>
+        public class QueryHandler : IRequestHandler<Query, Command>
         {
             private readonly SchoolContext _db;
+            private readonly IConfigurationProvider _configuration;
 
-            public QueryHandler(SchoolContext db) => _db = db;
+            public QueryHandler(SchoolContext db, IConfigurationProvider configuration)
+            {
+                _db = db;
+                _configuration = configuration;
+            }
 
-            protected override async Task<Command> HandleCore(Query message)
+            public async Task<Command> Handle(Query message, CancellationToken token)
             {
                 Command model;
                 if (message.Id == null)
@@ -99,7 +105,7 @@ namespace ContosoUniversity.Features.Instructors
                         .Include(m => m.CourseAssignments)
                         .ThenInclude(ca => ca.Course)
                         .Where(i => i.Id == message.Id)
-                        .ProjectTo<Command>()
+                        .ProjectTo<Command>(_configuration)
                         .SingleOrDefaultAsync<Command>();
 
                     //.ProjectTo<Command>()
@@ -126,13 +132,13 @@ namespace ContosoUniversity.Features.Instructors
 
         }
 
-        public class CommandHandler : AsyncRequestHandler<Command, int>
+        public class CommandHandler : IRequestHandler<Command, int>
         {
             private readonly SchoolContext _db;
 
             public CommandHandler(SchoolContext db) => _db = db;
 
-            protected override async Task<int> HandleCore(Command message)
+            public async Task<int> Handle(Command message, CancellationToken token)
             {
                 Instructor instructor;
                 if (message.Id == null)

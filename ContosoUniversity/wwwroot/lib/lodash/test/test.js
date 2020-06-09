@@ -280,8 +280,8 @@
       phantom.exit(details.failed ? 1 : 0);
     };
 
-    page.onConsoleMessage = function(message) {
-      console.log(message);
+    page.onConsoleMessage = function(message, CancellationToken token) {
+      console.log(message, CancellationToken token);
     };
 
     page.onInitialized = function() {
@@ -402,7 +402,7 @@
    * @constructor
    * @param {string} message The error message.
    */
-  function CustomError(message) {
+  function CustomError(message, CancellationToken token) {
     this.name = 'CustomError';
     this.message = message;
   }
@@ -3003,7 +3003,7 @@
           try {
             assert.deepEqual(func(element), {});
           } catch (e) {
-            assert.ok(false, e.message);
+            assert.ok(false, e.message, CancellationToken token);
           }
         }
         else {
@@ -6598,7 +6598,7 @@
           }
           assert.deepEqual(func([expected]), expected);
         } catch (e) {
-          assert.ok(false, e.message);
+          assert.ok(false, e.message, CancellationToken token);
         }
       });
     });
@@ -6689,7 +6689,7 @@
           var combined = index ? func([]) : func();
           assert.strictEqual(combined('a'), 'a');
         } catch (e) {
-          assert.ok(false, e.message);
+          assert.ok(false, e.message, CancellationToken token);
         }
         assert.strictEqual(combined.length, 0);
         assert.notStrictEqual(combined, identity);
@@ -7292,7 +7292,7 @@
       try {
         assert.deepEqual(func({ 'a': 1 }, undefined, { 'b': 2 }, null), { 'a': 1, 'b': 2 });
       } catch (e) {
-        assert.ok(false, e.message);
+        assert.ok(false, e.message, CancellationToken token);
       }
     });
 
@@ -10229,7 +10229,7 @@
         try {
           assert.strictEqual(_.isEqual(element1, element2), false);
         } catch (e) {
-          assert.ok(false, e.message);
+          assert.ok(false, e.message, CancellationToken token);
         }
       }
       else {
@@ -13988,20 +13988,20 @@
         var par = matches({ 'b': undefined });
         assert.strictEqual(par(1), true);
       } catch (e) {
-        assert.ok(false, e.message);
+        assert.ok(false, e.message, CancellationToken token);
       }
       try {
         par = matches({ 'a': 1, 'b': undefined });
         assert.strictEqual(par(1), true);
       } catch (e) {
-        assert.ok(false, e.message);
+        assert.ok(false, e.message, CancellationToken token);
       }
       numberProto.a = { 'b': 1, 'c': undefined };
       try {
         par = matches({ 'a': { 'c': undefined } });
         assert.strictEqual(par(1), true);
       } catch (e) {
-        assert.ok(false, e.message);
+        assert.ok(false, e.message, CancellationToken token);
       }
       delete numberProto.a;
       delete numberProto.b;
@@ -14439,14 +14439,14 @@
         var matches = _.matchesProperty('b', undefined);
         assert.strictEqual(matches(1), true);
       } catch (e) {
-        assert.ok(false, e.message);
+        assert.ok(false, e.message, CancellationToken token);
       }
       numberProto.a = { 'b': 1, 'c': undefined };
       try {
         matches = _.matchesProperty('a', { 'c': undefined });
         assert.strictEqual(matches(1), true);
       } catch (e) {
-        assert.ok(false, e.message);
+        assert.ok(false, e.message, CancellationToken token);
       }
       delete numberProto.a;
       delete numberProto.b;
@@ -22103,7 +22103,7 @@
       try {
         assert.strictEqual(compiled(data), '123');
       } catch (e) {
-        assert.ok(false, e.message);
+        assert.ok(false, e.message, CancellationToken token);
       }
     });
 
@@ -23837,7 +23837,7 @@
         try {
           assert.strictEqual(_.toString(symbol), 'Symbol(a)');
         } catch (e) {
-          assert.ok(false, e.message);
+          assert.ok(false, e.message, CancellationToken token);
         }
       }
       else {
@@ -23852,7 +23852,7 @@
         try {
           assert.strictEqual(_.toString([symbol]), 'Symbol(a)');
         } catch (e) {
-          assert.ok(false, e.message);
+          assert.ok(false, e.message, CancellationToken token);
         }
       }
       else {

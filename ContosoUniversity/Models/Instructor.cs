@@ -7,8 +7,25 @@ using ContosoUniversity.Features.Instructors;
 
 namespace ContosoUniversity.Models
 {
-    public class Instructor : Person
+    // Removed Person parent class because
+    // System.InvalidOperationException : The entity type 'Instructor' cannot be mapped to a table because it is derived from 'Person'. Only base entity types can be mapped to a table.
+    public class Instructor:IEntity
     {
+        public int Id { get; set; }
+
+        [Required]
+        [StringLength(50)]
+        [Display(Name = "Last Name")]
+        public string LastName { get; set; }
+        [Required]
+        [StringLength(50, ErrorMessage = "First name cannot be longer than 50 characters.")]
+        [Column("FirstName")]
+        [Display(Name = "First Name")]
+        public string FirstMidName { get; set; }
+
+        [Display(Name = "Full Name")]
+        public string FullName => LastName + ", " + FirstMidName;
+
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         [Display(Name = "Hire Date")]

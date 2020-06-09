@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
+using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using ContosoUniversity.Data;
 using MediatR;
@@ -28,21 +30,23 @@ namespace ContosoUniversity.Features.Courses
             }
         }
 
-        public class Handler : AsyncRequestHandler<Query, Result>
+        public class Handler : IRequestHandler<Query, Result>
         {
             private readonly SchoolContext _db;
+            private readonly IConfigurationProvider _configuration;
 
-            public Handler(SchoolContext db)
+            public Handler(SchoolContext db, IConfigurationProvider configuration)
             {
                 _db = db;
+                _configuration = configuration;
             }
 
-            protected override async Task<Result> HandleCore(Query message)
+            public async Task<Result> Handle(Query message, CancellationToken token)
             {
                 var courses = await _db.Courses
                     .OrderBy(d => d.Id)
-                    .ProjectTo<Result.Course>()
-                    .ToListAsync()
+                    .ProjectTo<Result.Course>(_configuration)
+                    .ToListAsync(token)
                     //.ProjectToListAsync<Result.Course>()
                     ;
 

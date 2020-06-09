@@ -91,7 +91,7 @@ namespace ContosoUniversity.IntegrationTests.Features.Instructors
             instructorCount.ShouldBe(0);
 
             var englishDeptId = englishDept.Id;
-            englishDept = await ExecuteDbContextAsync(db => db.Departments.FindAsync(englishDeptId));
+            englishDept = await ExecuteDbContextAsync(db => db.Departments.Where(d=>d.Id==englishDeptId).SingleOrDefaultAsync());
 
             englishDept.InstructorID.ShouldBeNull();
 

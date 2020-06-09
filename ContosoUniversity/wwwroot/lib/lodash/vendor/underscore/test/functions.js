@@ -29,7 +29,7 @@
     func = _.bind(func, this, 'hello', 'moe', 'curly');
     assert.equal(func(), 'hello: moe curly', 'the function was partially applied in advance and can accept multiple arguments');
 
-    func = function(ctx, message) { assert.equal(this, ctx, message); };
+    func = function(ctx, message, CancellationToken token) { assert.equal(this, ctx, message, CancellationToken token); };
     _.bind(func, 0, 0, 'can bind a function to `0`')();
     _.bind(func, '', '', 'can bind a function to an empty string')();
     _.bind(func, false, false, 'can bind a function to `false`')();

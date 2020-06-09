@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
-using AutoMapper.QueryableExtensions;
+using AutoMapper;
 using ContosoUniversity.Data;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -29,17 +31,30 @@ namespace ContosoUniversity.Features.Departments
             public string AdministratorFullName { get; set; }
         }
 
-        public class QueryHandler : AsyncRequestHandler<Query, List<Model>>
+        public class QueryHandler : IRequestHandler<Query, List<Model>>
         {
             private readonly SchoolContext _context;
+            private readonly IConfigurationProvider _configuration;
+            private readonly IMapper _mapper;
 
-            public QueryHandler(SchoolContext context) => _context = context;
-
-            protected override async Task<List<Model>> HandleCore(Query message)
+            public QueryHandler(SchoolContext context, IConfigurationProvider configuration, IMapper mapper)
             {
-                var projectTo = _context.Departments
-                    .ProjectTo<Model>();
-                return await projectTo.ToListAsync();
+                _context = context;
+                _configuration = configuration;
+                _mapper = mapper;
+            }
+
+            public async Task<List<Model>> Handle(Query message, CancellationToken token)
+            {
+
+                // throws null exceptions on Should_list_departments
+                //return await _context.Departments
+                //    .ProjectTo<Model>(_configuration)
+                //    .ToListAsync(token);
+
+                var departments = await _context.Departments.ToListAsync(token);
+
+                return departments.Select(x => _mapper.Map<Model>(x)).ToList();
             }
         }
     }

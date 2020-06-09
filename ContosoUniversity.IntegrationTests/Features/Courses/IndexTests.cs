@@ -51,7 +51,7 @@
             };
             await InsertAsync(englishDept, historyDept, english, history);
 
-            var result = await SendAsync(new Index.Query());
+            var result = await SendAsync(new ContosoUniversity.Features.Courses.Index.Query());
 
             result.ShouldNotBeNull();
             result.Courses.Count.ShouldBeGreaterThanOrEqualTo(2);

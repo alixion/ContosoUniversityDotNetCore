@@ -30,7 +30,7 @@ namespace ContosoUniversity.IntegrationTests.Features.Students
             };
             await InsertAsync(student1, student2);
 
-            var query = new Index.Query{CurrentFilter = lastName };
+            var query = new ContosoUniversity.Features.Students.Index.Query{CurrentFilter = lastName };
 
             var result = await SendAsync(query);
 
@@ -58,7 +58,7 @@ namespace ContosoUniversity.IntegrationTests.Features.Students
             };
             await InsertAsync(student1, student2);
 
-            var query = new Index.Query{CurrentFilter = lastName, SortOrder = "name_desc" };
+            var query = new ContosoUniversity.Features.Students.Index.Query{CurrentFilter = lastName, SortOrder = "name_desc" };
 
             var result = await SendAsync(query);
 

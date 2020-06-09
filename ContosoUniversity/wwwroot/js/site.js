@@ -35,7 +35,7 @@ var showSummary = function (response) {
     });
 
     _.each(nonNullErrors, function (error) {
-        errors.push(error.ErrorMessage);
+        errors.push(error.Errormessage, CancellationToken token);
     });
 
     if (nonNullErrors.length !== verboseErrors.length) {

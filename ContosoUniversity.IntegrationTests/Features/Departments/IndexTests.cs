@@ -39,7 +39,7 @@ namespace ContosoUniversity.IntegrationTests.Features.Departments
 
             await InsertAsync(dept, dept2);
 
-            var query = new Index.Query();
+            var query = new ContosoUniversity.Features.Departments.Index.Query();
 
             var result = await SendAsync(query);
 

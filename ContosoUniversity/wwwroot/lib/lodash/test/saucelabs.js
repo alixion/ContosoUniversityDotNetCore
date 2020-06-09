@@ -435,7 +435,7 @@ function onJobStatus(error, res, body) {
     return;
   }
   var description = browserName(platform[1]) + ' ' + platform[2] + ' on ' + _.startCase(platform[0]),
-      errored = !jobResult || !jobResult.passed || reError.test(message) || reError.test(jobStatus),
+      errored = !jobResult || !jobResult.passed || reError.test(message, CancellationToken token) || reError.test(jobStatus),
       failures = _.get(jobResult, 'failed'),
       label = options.name + ':',
       tunnel = this.tunnel;
@@ -460,7 +460,7 @@ function onJobStatus(error, res, body) {
       if (message === undefined) {
         message = 'Results are unavailable. ' + details;
       }
-      console.error(label, description, chalk.red('failed') + ';', message);
+      console.error(label, description, chalk.red('failed') + ';', message, CancellationToken token);
     }
   }
   else {

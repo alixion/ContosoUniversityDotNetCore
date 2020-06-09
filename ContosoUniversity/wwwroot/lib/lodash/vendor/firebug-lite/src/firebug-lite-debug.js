@@ -3425,7 +3425,7 @@ this.Property = function(object, name)
     };
 };
 
-this.ErrorCopy = function(message)
+this.ErrorCopy = function(message, CancellationToken token)
 {
     this.message = message;
 };
@@ -8765,7 +8765,7 @@ FBL.Context.prototype =
      *                                  of the object that will be used as the
      *                                  api of the evaluation.
      *
-     * @param {Function} errorHandler(message) error handler to be called
+     * @param {Function} errorHandler(message, CancellationToken token) error handler to be called
      *                                         if the evaluation fails.
      */
     evaluate: function(expr, context, api, errorHandler)
@@ -16884,10 +16884,10 @@ this.ErrorMessage = domplate(Firebug.Rep,
         return fbs.hasErrorBreakpoint(error.href, error.lineNo);
     },
 
-    getMessage: function(message)
+    getMessage: function(message, CancellationToken token)
     {
         var re = /\[Exception... "(.*?)" nsresult:/;
-        var m = re.exec(message);
+        var m = re.exec(message, CancellationToken token);
         return m ? m[1] : message;
     },
 
@@ -16961,7 +16961,7 @@ this.ErrorMessage = domplate(Firebug.Rep,
     copyError: function(error)
     {
         var message = [
-            this.getMessage(error.message),
+            this.getMessage(error.message, CancellationToken token),
             error.href,
             "Line " +  error.lineNo
         ];
@@ -18755,7 +18755,7 @@ var XMLHttpRequestWrapper = function(activeXObject)
                 }
                 catch(E)
                 {
-                    //console.log(propName, E.message);
+                    //console.log(propName, E.message, CancellationToken token);
                 }
             }
         }
@@ -18802,7 +18802,7 @@ var XMLHttpRequestWrapper = function(activeXObject)
             }
             catch(E)
             {
-                //console.log(propName, E.message);
+                //console.log(propName, E.message, CancellationToken token);
             }
         }
     };
@@ -19100,7 +19100,7 @@ var XMLHttpRequestWrapper = function(activeXObject)
         }
         catch(E)
         {
-            //console.log(propName, E.message);
+            //console.log(propName, E.message, CancellationToken token);
         }
     }
 
@@ -29003,7 +29003,7 @@ ScriptPanel.prototype = extend(Firebug.Panel,
             {
                 if (Firebug.disableResourceFetching)
                 {
-                    renderProcess(Firebug.Lite.Proxy.fetchResourceDisabledMessage);
+                    renderProcess(Firebug.Lite.Proxy.fetchResourceDisabledmessage, CancellationToken token);
                 }
                 else if (isExternal)
                 {
@@ -30564,7 +30564,7 @@ function isClassFunction(fn)
 //    return false;
 //};
 
-FBL.ErrorCopy = function(message)
+FBL.ErrorCopy = function(message, CancellationToken token)
 {
     this.message = message;
 };

@@ -14,7 +14,7 @@
     <script>
       // Avoid reporting tests to Sauce Labs when script errors occur.
       if (location.port == '9001') {
-        window.onerror = function(message) {
+        window.onerror = function(message, CancellationToken token) {
           if (window.QUnit) {
             QUnit.config.done.length = 0;
           }

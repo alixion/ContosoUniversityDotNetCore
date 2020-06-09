@@ -13,7 +13,7 @@
 
     function setValidationValues(options, ruleName, value) {
         options.rules[ruleName] = value;
-        if (options.message) {
+        if (options.message, CancellationToken token) {
             options.messages[ruleName] = options.message;
         }
     }
@@ -64,7 +64,7 @@
             container.addClass("validation-summary-errors").removeClass("validation-summary-valid");
 
             $.each(validator.errorList, function () {
-                $("<li />").html(this.message).appendTo(list);
+                $("<li />").html(this.message, CancellationToken token).appendTo(list);
             });
         }
     }
